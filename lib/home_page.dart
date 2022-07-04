@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import './blank_pixel.dart';
 import './snake_pixel.dart';
+import './food_pixel.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -15,8 +18,23 @@ class _HomePageState extends State<HomePage> {
   int rowSize = 10;
   int totalNumberOfSquares = 100;
 
-  //Snake index;s
+  //Snake Pos
   List<int> snakePos = [0, 1, 2];
+
+  //Food Pos
+  int foodPos = 55;
+
+  //Start Game
+  void startGame() {
+    Timer.periodic(Duration(milliseconds: 200), (timer) {
+      setState(() {
+        //add new head
+        snakePos.add(snakePos.last + 1);
+        //remove the tail
+        snakePos.removeAt(0);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +57,9 @@ class _HomePageState extends State<HomePage> {
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 if (snakePos.contains(index)) {
-                  return SnakePixel();
+                  return const SnakePixel();
+                } else if (foodPos == index) {
+                  return const FoodPixel();
                 } else {
                   return BlankPixel();
                 }
@@ -48,7 +68,15 @@ class _HomePageState extends State<HomePage> {
           ),
           //Playbutton
           Expanded(
-            child: Container(),
+            child: Container(
+              child: Center(
+                child: MaterialButton(
+                  onPressed: () => startGame(),
+                  child: Text("PLAY"),
+                  color: Colors.pink,
+                ),
+              ),
+            ),
           ),
         ],
       ),

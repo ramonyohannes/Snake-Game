@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 
-class SnakePixel extends StatefulWidget {
-  SnakePixel({Key? key}) : super(key: key);
+class SnakePixel extends StatelessWidget {
+  const SnakePixel({Key? key}) : super(key: key);
 
-  @override
-  State<SnakePixel> createState() => _SnakePixelState();
-}
-
-class _SnakePixelState extends State<SnakePixel> {
   @override
   Widget build(BuildContext context) {
     return Padding(
