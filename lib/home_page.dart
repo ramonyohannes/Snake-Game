@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -33,12 +34,51 @@ class _HomePageState extends State<HomePage> {
   void startGame() {
     Timer.periodic(const Duration(milliseconds: 200), (timer) {
       setState(() {
-        snake();
+        moveSnake();
+        //check if game id over
+        if (gameOver()) {
+          timer.cancel();
+          showDialog(
+              context: context,
+              builder: (ctx) {
+                return AlertDialog(
+                  title: Text("Game Over"),
+                  actions: [
+                    MaterialButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        setState(() {
+                          snakePos = [0, 1, 2];
+                          foodPos = 55;
+                          snakeDirection = SnakeDirection.RIGHT;
+                        });
+                      },
+                      child: const Text("Restart Game"),
+                    )
+                  ],
+                );
+              });
+        }
       });
     });
   }
 
-  void snake() {
+  void eatFood() {
+    while (snakePos.contains(foodPos)) {
+      foodPos = Random().nextInt(totalNumberOfSquares);
+    }
+  }
+
+  bool gameOver() {
+    List<int> bodySnake = snakePos.sublist(0, snakePos.length - 1);
+    if (bodySnake.contains(snakePos.last)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void moveSnake() {
     switch (snakeDirection) {
       case SnakeDirection.RIGHT:
         {
@@ -49,9 +89,6 @@ class _HomePageState extends State<HomePage> {
             //add new head
             snakePos.add(snakePos.last + 1);
           }
-
-          //remove the tail
-          snakePos.removeAt(0);
         }
         break;
 
@@ -64,9 +101,6 @@ class _HomePageState extends State<HomePage> {
             //add new head
             snakePos.add(snakePos.last - 1);
           }
-
-          //remove the tail
-          snakePos.removeAt(0);
         }
         break;
 
@@ -79,9 +113,6 @@ class _HomePageState extends State<HomePage> {
             //add new head
             snakePos.add(snakePos.last + rowSize);
           }
-
-          //remove the tail
-          snakePos.removeAt(0);
         }
         break;
 
@@ -94,12 +125,15 @@ class _HomePageState extends State<HomePage> {
             //add new head
             snakePos.add(snakePos.last - rowSize);
           }
-
-          //remove the tail
-          snakePos.removeAt(0);
         }
         break;
       default:
+    }
+    if (snakePos.last == foodPos) {
+      eatFood();
+    } else {
+//remove the tail
+      snakePos.removeAt(0);
     }
   }
 
