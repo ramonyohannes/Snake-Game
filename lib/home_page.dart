@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import './blank_pixel.dart';
+import './snake_pixel.dart';
+
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
 
@@ -11,6 +14,9 @@ class _HomePageState extends State<HomePage> {
   //Grid Dimenstions
   int rowSize = 10;
   int totalNumberOfSquares = 100;
+
+  //Snake index;s
+  List<int> snakePos = [0, 1, 2];
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +38,11 @@ class _HomePageState extends State<HomePage> {
               itemCount: totalNumberOfSquares,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    color: Colors.white,
-                  ),
-                );
+                if (snakePos.contains(index)) {
+                  return SnakePixel();
+                } else {
+                  return BlankPixel();
+                }
               },
             ),
           ),
