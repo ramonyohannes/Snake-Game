@@ -42,8 +42,14 @@ class _HomePageState extends State<HomePage> {
     switch (snakeDirection) {
       case SnakeDirection.RIGHT:
         {
-          //add new head
-          snakePos.add(snakePos.last + 1);
+          //If snake is at the last of the row, readjest
+          if (snakePos.last % rowSize == 9) {
+            snakePos.add(snakePos.last + 1 - rowSize);
+          } else {
+            //add new head
+            snakePos.add(snakePos.last + 1);
+          }
+
           //remove the tail
           snakePos.removeAt(0);
         }
@@ -51,8 +57,14 @@ class _HomePageState extends State<HomePage> {
 
       case SnakeDirection.LEFT:
         {
-          //add new head
-          snakePos.add(snakePos.last - 1);
+          //If snake is at the last of the row, readjest
+          if (snakePos.last % rowSize == 0) {
+            snakePos.add(snakePos.last - 1 + rowSize);
+          } else {
+            //add new head
+            snakePos.add(snakePos.last - 1);
+          }
+
           //remove the tail
           snakePos.removeAt(0);
         }
@@ -60,8 +72,14 @@ class _HomePageState extends State<HomePage> {
 
       case SnakeDirection.DOWN:
         {
-          //add new head
-          snakePos.add(snakePos.last + rowSize);
+          //IF snake is at last down , readjust
+          if (snakePos.last + rowSize > totalNumberOfSquares) {
+            snakePos.add(snakePos.last + rowSize - totalNumberOfSquares);
+          } else {
+            //add new head
+            snakePos.add(snakePos.last + rowSize);
+          }
+
           //remove the tail
           snakePos.removeAt(0);
         }
@@ -69,8 +87,14 @@ class _HomePageState extends State<HomePage> {
 
       case SnakeDirection.UP:
         {
-          //add new head
-          snakePos.add(snakePos.last - rowSize);
+          //If snake head is at very top, readjust
+          if (snakePos.last < rowSize) {
+            snakePos.add(snakePos.last - rowSize + totalNumberOfSquares);
+          } else {
+            //add new head
+            snakePos.add(snakePos.last - rowSize);
+          }
+
           //remove the tail
           snakePos.removeAt(0);
         }
