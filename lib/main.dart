@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import './home_page.dart';
+import './Landing_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
       title: 'Material App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(brightness: Brightness.dark),
-      home: HomePage(),
+      home: LandingPage(),
     );
   }
 }

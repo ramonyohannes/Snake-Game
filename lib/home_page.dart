@@ -6,9 +6,12 @@ import 'package:flutter/material.dart';
 import './blank_pixel.dart';
 import './snake_pixel.dart';
 import './food_pixel.dart';
+import './Landing_page.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+  //HomePage({Key? key}) : super(key: key);
+  int speed;
+  HomePage(this.speed);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -20,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   //Grid Dimenstions
   int rowSize = 10;
   int totalNumberOfSquares = 100;
+  //int speed = 200;
 
   //Snake Pos
   List<int> snakePos = [0, 1, 2];
@@ -31,18 +35,21 @@ class _HomePageState extends State<HomePage> {
   var snakeDirection = SnakeDirection.RIGHT;
 
   //Start Game
-  void startGame() {
-    Timer.periodic(const Duration(milliseconds: 200), (timer) {
+  void startGame(bool status) {
+    Timer.periodic(Duration(milliseconds: int.parse(widget.speed.toString())),
+        (timer) {
       setState(() {
         moveSnake();
+        print(widget.speed.toString());
+
         //check if game id over
-        if (gameOver()) {
+        if (gameOver() || !status) {
           timer.cancel();
           showDialog(
               context: context,
               builder: (ctx) {
                 return AlertDialog(
-                  title: Text("Game Over"),
+                  title: const Text("Game Over"),
                   actions: [
                     MaterialButton(
                       onPressed: () {
@@ -82,6 +89,11 @@ class _HomePageState extends State<HomePage> {
     switch (snakeDirection) {
       case SnakeDirection.RIGHT:
         {
+          if (widget.speed == 300) {
+            if (snakePos.last % rowSize == 9) {
+              startGame(false);
+            }
+          }
           //If snake is at the last of the row, readjest
           if (snakePos.last % rowSize == 9) {
             snakePos.add(snakePos.last + 1 - rowSize);
@@ -139,13 +151,33 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    int totalScore = snakePos.length;
     return Scaffold(
+      appBar: AppBar(
+        title: Text('data'),
+      ),
       backgroundColor: Colors.black,
       body: Column(
         children: [
           //totalscore section
           Expanded(
-            child: Container(),
+            child: Container(
+              child: Center(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    const Text("Total Score"),
+                    Text(
+                      snakePos.length == 3
+                          ? "0"
+                          : (snakePos.length - 3).toString(),
+                    )
+                  ],
+                ),
+              ),
+            ),
           ),
           //Game space
           Expanded(
@@ -200,7 +232,7 @@ class _HomePageState extends State<HomePage> {
             child: Container(
               child: Center(
                 child: MaterialButton(
-                  onPressed: () => startGame(),
+                  onPressed: () => startGame(true),
                   child: Text("PLAY"),
                   color: Colors.pink,
                 ),
